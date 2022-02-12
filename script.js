@@ -1,78 +1,34 @@
-// Declaring vars
-var query = null
-var gAmount = ''
-var gRate = ''
-var gYear = ''
-var computedDiv = undefined
-var year = null
-var currentYear = null
-window.addEventListener('DOMContentLoaded', event => {
-    // Expels redundancy. Assigns after DOM contents have loaded
-     query = selector =>  document.querySelector( '#'+selector ) 
-
-     computedDiv = query( 'result' ) 
-     computedDiv.style.display = 'none' // Hide text initially
-
-     gRate = 3.5 // initial value of range
-     
-     currentYear = new Date().getFullYear()
-     year = query( 'year-text' ) 
-
-     
-
-});
-
-    
-
 function compute()
 {
-    principalTag = query("principal");
+		//Create variables from input
+    let principal = document.getElementById("principal").value;
+    let rate = document.getElementById("rate").value;
+    let years = document.getElementById("years").value;
     
-    principal = principalTag.value
-    if ( principal==='' )
-    {
-        alert( 'Please specify an amount' )
-        return
-    } else if ( principal<=0 ) {
-        
-        alert( "Enter a positive number" )
+    //do math
+    let interest = principal * years * rate / 100;
+    let endYear = new Date().getFullYear() + parseInt(years);
 
-        principalTag.focus()
-        return 
+    //compound interest formula
+    let compounded = principal * ((1 + ((rate/100)/12)) ** (12*years))
+		
+    //validate the principal. If negative or 0 alert user and focus on principal
+    if(principal <= 0){
+        alert("Enter a positive number");
+        document.getElementById("principal").focus();
+        return false;
     }
-
-    computed = query( 'result' )
-    finalAmountSelected = query( 'amount-text' )
-    finalAmountSelected.innerHTML = principal
-    finalRating = query( 'rateing-my-text' )
-    computedAmount = query( 'recieved-text' )
-
-    console.log( finalRating )
-    total = (principal/100)*gRate
-    years = query( 'years' ).value
-
-    if ( years==='' )
-    {
-        alert( 'Please specify year(s)' )
-        return
-    }
-
-    interest = years * total // interest var for interest
-    computedAmount.innerHTML =  interest
-    //computed.innerHTML = p
-
-    computedDiv.style.display = 'block'
-    finalRating.innerHTML = gRate+'%'
-
-    year.innerHTML = currentYear+ parseInt( years ) // Set current year
-
-
+    
+    //display result
+    document.getElementById("result").innerHTML = `If you deposit <mark>${principal}</mark>,<br>at an interest rate of 
+    <mark>${rate}</mark>.<br>You will receive an amount of <mark>${interest.toFixed(2)}</mark>,<br>in the year <mark>${endYear}</mark><br>
+    <br>With monthly compounded interest your balance would instead be <mark>${compounded.toFixed(2)}</mark>`;
 }
 
-
-function getRange( value )
+//display rate % by slider
+function rangeReader()
 {
-    rate = query( 'rate-text' )
-    rate.innerHTML = (value)+'%'
-    gRate = (value)
+    let sliderValue = document.getElementById("rate").value;
+    document.getElementById("sliderValue").innerText = `${sliderValue}%`;
 }
+     
